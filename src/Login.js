@@ -30,7 +30,7 @@ const Login = () => {
           alt=""
         />
         <div className="login__text">
-          <h1>Sign in to Whatsapp</h1>
+          <h1>Sign in to Chatsapp</h1>
         </div>
         <Button onClick={signIn}>Sign In With Google</Button>
       </div>
