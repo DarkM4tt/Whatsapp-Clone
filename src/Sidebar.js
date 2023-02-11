@@ -3,15 +3,31 @@ import { Avatar, IconButton, Input } from "@mui/material";
 import ChatIcon from "@mui/icons-material/Chat";
 import { DonutLarge, MoreVert, SearchOutlined } from "@mui/icons-material";
 import SidebarChat from "./SidebarChat";
-import db from "./firebase";
+import db, { auth } from "./firebase";
 import { collection, onSnapshot, query } from "firebase/firestore";
 import { useStateValue } from "./StateProvider";
 
 import "./Sidebar.css";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 
 const Sidebar = () => {
   const [rooms, setRooms] = useState([]);
   const [{ user }] = useStateValue();
+  const [user1, setUser1] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (authUser) => {
+      if (authUser) {
+        setUser1(authUser);
+      } else {
+        setUser1(null);
+      }
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, [user]);
 
   useEffect(() => {
     const q = query(collection(db, "rooms"));
@@ -29,13 +45,24 @@ const Sidebar = () => {
     };
   }, []);
 
+  console.log(user?.photoURL);
+  console.log(typeof user?.photoURL);
+
   return (
     <div className="sidebar">
       <div className="sidebar__header">
-        {user.photoURL ? (
-          <Avatar src={user?.photoURL} />
+        {user1?.photoURL === undefined ? (
+          <Avatar
+            onClick={() => signOut(auth)}
+            style={{ cursor: "pointer" }}
+            src={`https://api.multiavatar.com/100.svg`}
+          />
         ) : (
-          <Avatar src={`https://api.multiavatar.com/100.svg`} />
+          <Avatar
+            onClick={() => signOut(auth)}
+            style={{ cursor: "pointer" }}
+            src={user?.photoURL}
+          />
         )}
         <div className="sidebar__headerRight">
           <IconButton>

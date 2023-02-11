@@ -1,13 +1,13 @@
+import { Button } from "@mui/material";
 import React from "react";
 import "./Login.css";
-import { Button } from "@mui/material";
 import { auth, provider } from "./firebase";
 import { signInWithPopup } from "firebase/auth";
 import { useStateValue } from "./StateProvider";
 import { actionTypes } from "./reducer";
 
 const Login = () => {
-  const [{ user }, dispatch] = useStateValue();
+  const [{}, dispatch] = useStateValue();
 
   const signIn = () => {
     signInWithPopup(auth, provider)
@@ -20,8 +20,6 @@ const Login = () => {
       .catch((err) => alert(err.message));
   };
 
-  user && console.log("username: " + user.displayName);
-
   return (
     <div className="login">
       <div className="login__container">
@@ -32,7 +30,9 @@ const Login = () => {
         <div className="login__text">
           <h1>Sign in to Chatsapp</h1>
         </div>
-        <Button onClick={signIn}>Sign In With Google</Button>
+        <Button type="submit" onClick={signIn}>
+          Sign In With Google
+        </Button>
       </div>
     </div>
   );
